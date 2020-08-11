@@ -1,0 +1,17 @@
+*{padding: 0; margin: 0; box-sizing: border-box;}
+        .mobileDevice{ color: #fff;  width: 185px; display: flex; align-items: center; justify-content: center; width: 100%; height: 100vh;background-image: url(../gamebg2.jpg); background-size: contain; }
+        .mobileDevice p{ background-color: darkcyan; padding: 16px; font-family: monospace; font-size: 14px; text-transform: uppercase; box-shadow: 0 2px 7px #000; border-radius: 5px;}
+        .gameWrap{background-image: url(../gamebg2.jpg); background-size:cover;}
+        /* .animation{background-image: url(gamebg2.jpg); background-size:cover; animation: marquee 30s infinite linear;background-repeat: repeat} */
+        .display-none{display: none;}
+        .car{width: 35px; height: 80px; background-color:blue; border-radius: 20%; position: absolute; left: 50px; bottom:100px; background-image: url(../carImg.png); background-position: center; background-size: cover; background-repeat: no-repeat;}
+        .gameRoad{width:350px; height: 100vh; background-color:#535c68; border-right: 4px dashed #fff; border-left: 4px dashed #fff; margin: auto; position: relative; overflow: hidden;}
+        .roadLines{width: 10px; height: 70px; background-color: #fff; position: absolute; left: 48%;}
+        .oppCars{width: 35px; height: 80px;border-radius: 20%; position: absolute;background-image: url(../carImg.png); background-position: center; background-size: cover; background-repeat: no-repeat;}
+        .scoreCard{ z-index: 10; width: 200px; position: absolute; background-color: lightblue; text-align: center; padding: 20px; top: 15px; left: 16px; box-shadow: 0 0 5px #ccc; border-radius: 5px; font-size: 20px; font-family: monospace; text-transform: uppercase; }
+        .startScreen{width:400px; position: absolute; text-align: center; top: 40%; left: 35%; background: darkcyan; padding: 28px; font-size: 16px; border-radius: 5px; color: #fff; box-shadow: 0 0 5px #ccc; font-family: monospace; letter-spacing: normal; text-transform: capitalize; cursor: pointer; z-index: 10;}
+       .endgame{background-color: #fff; color: darkcyan; font-weight: bold; padding: 0 5px; box-shadow: 0 0 5px #fff; border-radius:5px; }
+        /* @keyframes marquee {
+            0% { background-position-y: -1190px; }
+            100% { background-position-y: 0; }
+        } */

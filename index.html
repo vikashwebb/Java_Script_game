@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D Game in javaScript</title>
+    <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+    <div class="mobileDevice">
+        <p>Please open this link in laptop or desktop!</p>
+    </div>
+    <div class="gameWrap display-none">
+      
+        <div class="scoreCard display-none">
+            Score : 0
+        </div>
+        <div class="startScreen">
+            <p>click here to start</p>
+            <p>use keybord arrows key to play the game</p>
+        </div>
+        <div class="gameRoad"></div>
+    </div>
+
+    <script>
+        
+        const mobileDevice = document.querySelector('.mobileDevice')
+        const gameWrap = document.querySelector('.gameWrap')
+        const scoreCard = document.querySelector('.scoreCard');
+        const startScreen = document.querySelector('.startScreen');
+        const gameRoad = document.querySelector('.gameRoad');
+
+        startScreen.addEventListener('click', gameStart);
+        let Player = { speed:5, scoreCard: 0 };
+        let arrowKeys = { arrowUp: false, arrowDown: false, arrowLeft: false, arrowDown: false }
+
+        document.addEventListener('keyup', keyUp);
+        document.addEventListener('keydown', keyDown);
+        
+        function keyDown(e){
+            arrowKeys[e.key] = true;
+            e.preventDefault();
+            // console.log(arrowKeys);
+            // console.log(e.key);  
+        }
+        function keyUp(e){
+            arrowKeys[e.key] = false;
+            e.preventDefault();
+            // console.log(e.key);
+            // console.log(arrowKeys);
+
+        }
+        function carHiting(a,b){
+            aRact = a.getBoundingClientRect();
+            bRact = b.getBoundingClientRect();
+
+            return !((aRact.top > bRact.bottom ) || (aRact.bottom < bRact.top) || (aRact.left > bRact.right) || (aRact.right < bRact.left) )
+          }
+        function movingLines(){
+            let lines = document.querySelectorAll('.roadLines');
+            
+            lines.forEach(function(item){
+                if(item.y>700){
+                    item.y -= 725;
+                }
+                item.y += Player.speed;
+                item.style.top = item.y + "px";
+            })
+        }
+        function gameEnd(){
+            Player.gameStart = false;
+            startScreen.classList.remove('display-none');
+            scoreCard.classList.add('display-none');
+            startScreen.innerHTML = "<h1>Game Over</h1> <br> Final Score is <span class='endgame'>" + Player.scoreCard + "</span><br> Click to Restart the Game"
+            // gameWrap.classList.remove('animation');
+             
+        }
+        function movingOpp(car){
+            let Opp = document.querySelectorAll('.oppCars');
+            
+            Opp.forEach(function(item){
+                if(carHiting(car, item)){
+                    console.log('cars are Hiting');
+                    gameEnd();
+                }
+                if(item.y >= 700){
+                    item.y -= 1025;
+                    item.style.left = Math.floor(Math.random()*350 ) + "px";
+                }
+                item.y += Player.speed;
+                item.style.top = item.y + "px";
+            })
+        }
+
+        function gamePlay(){
+            let car = document.querySelector('.car');
+            let roadSize = gameRoad.getBoundingClientRect();
+
+            // console.log(roadSize);
+            if(Player.gameStart){
+                movingLines();
+                movingOpp(car);
+                if(arrowKeys.ArrowUp && Player.y > (roadSize.top + 200) ){Player.y -= Player.speed}
+                if(arrowKeys.ArrowDown && Player.y < (roadSize.bottom - 100)){Player.y += Player.speed}
+                if(arrowKeys.ArrowLeft && Player.x > 4){Player.x -= Player.speed}
+                if(arrowKeys.ArrowRight && Player.x < (roadSize.width - 60) ){Player.x += Player.speed}
+                
+                car.style.top = Player.y + "px";
+                car.style.left = Player.x + "px";
+
+                window.requestAnimationFrame(gamePlay);
+
+                console.log("score "+ Player.scoreCard++);
+                Player.scoreCard++;
+                scoreCard.innerText = "Score: "+ Player.scoreCard;
+
+            } 
+        }
+
+        function gameStart(){
+            Player.gameStart = true;
+            Player.scoreCard = 0;
+            // gameRoad.classList.remove('display-none');
+            gameRoad.innerHTML = "";
+            startScreen.classList.add('display-none');
+            scoreCard.classList.remove('display-none'); 
+            // gameWrap.classList.add('animation');
+
+            for(x=0; x<7; x++) {
+                let roadLine = document.createElement('div');
+                roadLine.setAttribute('class', 'roadLines');
+                roadLine.y = (x*105)
+                roadLine.style.top = roadLine.y + "px";
+                gameRoad.appendChild(roadLine);
+            }
+
+            window.requestAnimationFrame(gamePlay);
+            
+            let car = document.createElement('div');
+            car.setAttribute('class', 'car');
+            gameRoad.appendChild(car);
+
+            Player.x = car.offsetLeft;
+            Player.y = car.offsetTop;
+
+            
+            for(x=0; x<5; x++) {
+                let oppCar = document.createElement('div');
+                oppCar.setAttribute('class', 'oppCars');
+                oppCar.y = (x*-400)
+                oppCar.style.top = oppCar.y + "px";
+                oppCar.style.left = Math.floor(Math.random()*270 ) + "px";
+                
+                oppCar.style.backgroundColor = randomColor();
+                gameRoad.appendChild(oppCar);
+            }
+        }
+        function randomColor(){
+            function c(){
+                let hexColor = Math.floor(Math.random()*256).toString(16);
+                return ("0" + String(hexColor)).substr(-2); 
+            }
+            return "#"+c()+c()+c();
+
+        }
+        var platform = document.getElementById('platform');
+            if (navigator.userAgent.match(/iPhone/i)) {
+                mobileDevice.classList.remove('display-none');
+                gameWrap.classList.add('display-none');
+                // platform.textContent = "It's iPhone";
+            } else if (navigator.userAgent.match(/iPad/i)) {
+                mobileDevice.classList.remove('display-none');
+                gameWrap.classList.add('display-none');
+                // platform.textContent = "It's iPad";
+            } else if(screen.width <= 699) {
+                mobileDevice.classList.remove('display-none');
+                gameWrap.classList.add('display-none');
+                // platform.textContent = "It's Mobile";
+            } else if(navigator.userAgent.match(/Mac OS X/i)) {
+                mobileDevice.classList.add('display-none');
+                gameWrap.classList.remove('display-none');
+                // platform.textContent = "It's Mac!!";
+            } else {
+                mobileDevice.classList.add('display-none');
+                gameWrap.classList.remove('display-none');
+                // platform.textContent = "It's PC!!";
+            }
+    </script>
+    
+</body>
+</html>
